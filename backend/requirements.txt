@@ -2,7 +2,10 @@ fastapi
 uvicorn
 python-dotenv
 pydantic-settings
-Database URL
-JWT secret
-OpenAI key
-Ollama URL
+sqlalchemy
+psycopg2-binary
+alembic
+# Database URL
+# JWT secret
+# OpenAI key
+# Ollama URL
