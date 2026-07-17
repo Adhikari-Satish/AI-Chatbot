@@ -2,9 +2,17 @@ fastapi
 uvicorn
 python-dotenv
 pydantic-settings
+
 sqlalchemy
 psycopg2-binary
 alembic
+
+passlib[bcrypt]
+python-jose
+
+email-validator
+
+ollama
 # Database URL
 # JWT secret
 # OpenAI key
