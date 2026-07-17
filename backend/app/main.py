@@ -18,7 +18,7 @@ app = FastAPI(
 def home():
     return {
         "message": "Welcome to AI-Chatbot",
-        "version": settings.VERSION
+        # "version": settings.VERSION
     }
 
 

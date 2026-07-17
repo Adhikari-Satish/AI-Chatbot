@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     
     DATABASE_URL: str
     
-    DEBUG: bool = True
+    # DEBUG: bool = True
 
 
     class Config:
