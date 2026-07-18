@@ -23,6 +23,7 @@ def create_user(
         username=username,
         email=email,
         password=hashed
+        
     )
 
 

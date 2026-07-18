@@ -2,7 +2,12 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.db.database import engine, Base
 from app.models import user
-
+from app.models.user import User
+from app.models.chat import Chat
+from app.models.message import Message
+from app.api.v1.routes import chat_history
+from app.api.v1.routes import auth
+from app.api.v1.routes import chat
 
 Base.metadata.create_all(
     bind=engine
@@ -12,13 +17,20 @@ app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION
     )
-from app.api.v1.routes import auth
+
+
+app.include_router(
+    chat_history.router,
+    prefix="/api/v1"
+)
+
+
 app.include_router(
     auth.router,
     prefix="/api/v1"
 )
 
-from app.api.v1.routes import chat
+
 app.include_router(
     chat.router,
     prefix="/api/v1"
@@ -39,7 +51,7 @@ def health():
     }
     
 
-
+# .\venv\Scripts\Activate.ps1 (it creates a virtual environment)
 # ollama serve
 # uvicorn app.main:app --reload
 # uvicorn app.main:app --reload --reload-exclude venv
