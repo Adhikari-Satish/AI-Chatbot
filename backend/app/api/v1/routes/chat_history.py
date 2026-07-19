@@ -17,10 +17,7 @@ router = APIRouter(
 )
 
 
-@router.post(
-    "/create",
-    response_model=ChatResponse
-)
+@router.post("/create", response_model=ChatResponse)
 def new_chat(
     chat: ChatCreate,
     db: Session = Depends(get_db),

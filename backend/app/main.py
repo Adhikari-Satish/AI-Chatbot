@@ -8,6 +8,8 @@ from app.models.message import Message
 from app.api.v1.routes import chat_history
 from app.api.v1.routes import auth
 from app.api.v1.routes import chat
+from app.api.v1.routes import history
+from app.api.v1.routes import message
 
 Base.metadata.create_all(
     bind=engine
@@ -36,6 +38,17 @@ app.include_router(
     prefix="/api/v1"
 )
 
+app.include_router(
+    history.router,
+    prefix="/api/v1"
+)
+
+app.include_router(
+    message.router,
+    prefix="/api/v1"
+)
+
+
 @app.get("/")
 def home():
     return {
@@ -55,4 +68,5 @@ def health():
 # ollama serve
 # uvicorn app.main:app --reload
 # uvicorn app.main:app --reload --reload-exclude venv
+# uvicorn app.main:app --reload --reload-dir app
 # uvicorn app.main:app

@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.schemas.chat import (
-    ChatCreate,
-    ChatRename,
-    ChatResponse
-)
+from app.db.database import get_db
+
+from app.schemas.chat import ChatCreate, ChatResponse
 
 from app.services.chat_service import (
     create_chat,
@@ -13,95 +11,23 @@ from app.services.chat_service import (
     get_chat,
     rename_chat,
     delete_chat,
-    save_message,
     get_messages
 )
-
-from app.services.ai_service import generate_response
 
 from app.core.auth import get_current_user
 
 from app.models.user import User
-from app.db.database import get_db
 
 router = APIRouter(
-    prefix="/chat",
-    tags=["Chat"]
+    prefix="/history",
+    tags=["Chat History"]
 )
 
-
-# @router.post("/")
-# def chat(
-#     message: str,
-#     current_user: User = Depends(get_current_user)
-# ):
-
-#     response = generate_response(message)
-
-
-#     return {
-#         "user": current_user.username,
-#         "response": response
-#     }
-
-
-
-    
-@router.post("/{chat_id}/message")
-def chat(
-    chat_id:int,
-    message:str,
-    db:Session=Depends(get_db),
-    current_user:User=Depends(get_current_user)
-):
-
-    # save user message
-
-    save_message(
-        db,
-        chat_id,
-        "user",
-        message
-    )
-
-
-    # generate AI response
-
-    response = generate_response(message)
-
-
-    # save AI response
-
-    save_message(
-        db,
-        chat_id,
-        "assistant",
-        response
-    )
-
-
-    return {
-        "response":response
-    }
-
-@router.post("/", response_model=ChatResponse)
-def new_chat(
-    data: ChatCreate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-
-    return create_chat(
-        db,
-        data.title,
-        current_user.id
-    )
-    
-@router.post("/create", response_model=ChatResponse)
+@router.post("/new", response_model=ChatResponse)
 def new_chat(
     chat: ChatCreate,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
 
     return create_chat(
@@ -120,9 +46,10 @@ def all_chats(
         db,
         current_user.id
     )
-    
+
+
 @router.get("/{chat_id}")
-def single_chat(
+def one_chat(
     chat_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -146,27 +73,31 @@ def single_chat(
 @router.put("/{chat_id}")
 def update_chat(
     chat_id: int,
-    data: ChatRename,
+    chat: ChatCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
 
-    chat = rename_chat(
+    db_chat = get_chat(
         db,
         chat_id,
-        current_user.id,
-        data.title
+        current_user.id
     )
 
-    if not chat:
+    if not db_chat:
         raise HTTPException(
             status_code=404,
             detail="Chat not found"
         )
 
-    return chat
-
-
+    return rename_chat(
+        db=db,
+        chat_id=chat_id,
+        user_id=current_user.id,
+        title=chat.title
+    )
+    
+    
 @router.delete("/{chat_id}")
 def remove_chat(
     chat_id: int,
@@ -174,18 +105,33 @@ def remove_chat(
     current_user: User = Depends(get_current_user)
 ):
 
-    success = delete_chat(
+    chat = get_chat(
         db,
         chat_id,
         current_user.id
     )
 
-    if not success:
-        raise HTTPException(
-            status_code=404,
-            detail="Chat not found"
-        )
+    if not chat:
+        raise HTTPException(status_code=404, detail="Chat not found")
+
+    delete_chat(
+        db=db,
+        chat_id=chat_id,
+        user_id=current_user.id
+    )
 
     return {
         "message": "Chat deleted successfully"
     }
+    
+@router.get("/{chat_id}/messages")
+def messages(
+    chat_id:int,
+    db:Session=Depends(get_db),
+    current_user:User=Depends(get_current_user)
+):
+
+    return get_messages(
+        db,
+        chat_id
+    )

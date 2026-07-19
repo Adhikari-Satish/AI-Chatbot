@@ -58,9 +58,17 @@ def authenticate_user(
         user.password
     ):
         return None
-
-
+    # token = create_access_token(
+    #     {
+    #         "sub": str(user.id)
+    #     }
+    # )
+    
     return user
+    # return {
+    #     "access_token": token,
+    #     "token_type": "bearer"
+    # }
 
 
 
