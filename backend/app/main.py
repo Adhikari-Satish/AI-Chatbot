@@ -10,6 +10,7 @@ from app.api.v1.routes import auth
 from app.api.v1.routes import chat
 from app.api.v1.routes import history
 from app.api.v1.routes import message
+from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(
     bind=engine
@@ -20,6 +21,15 @@ app = FastAPI(
     version=settings.VERSION
     )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(
     chat_history.router,
