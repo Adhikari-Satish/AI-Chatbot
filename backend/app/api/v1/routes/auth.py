@@ -10,6 +10,8 @@ from app.schemas.user import (
     UserResponse,
     UserLogin
 )
+from app.schemas.user import UserUpdate, PasswordUpdate
+from app.core.security import hash_password, verify_password
 
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -20,6 +22,8 @@ from app.schemas.otp import OTPRequest
 from app.services.otp_service import save_otp
 
 from app.services.email_service import send_email
+from app.core.auth import get_current_user
+from app.models.user import User
 
 router = APIRouter(
     prefix="/auth",
@@ -78,6 +82,74 @@ def register(
 #         "message":
 #         "OTP sent successfully"
 #     }
+
+@router.get("/profile")
+def get_profile(
+    db: Session = Depends(get_db)
+):
+
+    user = db.query(User).first()
+
+    if not user:
+        return {
+            "username": "Guest",
+            "email": "guest@example.com"
+        }
+
+
+    return {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email
+    }
+
+@router.put("/profile")
+def update_profile(
+    data: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    current_user.username = data.username
+    current_user.email = data.email
+
+
+    db.commit()
+    db.refresh(current_user)
+
+
+    return current_user
+
+@router.put("/password")
+def change_password(
+    data: PasswordUpdate,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+
+    if not verify_password(
+        data.old_password,
+        current_user.password
+    ):
+
+        return {
+            "message":"Old password incorrect"
+        }
+
+
+
+    current_user.password = hash_password(
+        data.new_password
+    )
+
+
+    db.commit()
+
+
+    return {
+        "message":"Password updated successfully"
+    }
 
 @router.post("/login", response_model=dict)
 def login(

@@ -6,10 +6,9 @@ function Chat(){
     const [message,setMessage]=useState("");
     const [response,setResponse]=useState("");
     const sendMessage=async()=>{
-        const result = await axios.post("http://127.0.0.1:8000/api/v1/messages/generate_message", null,{
-            params:{
-            content:message
-        }});
+        const result = await axios.post("http://127.0.0.1:8000/api/v1/chat/", {
+            title: message
+        });
         setResponse(result.data.response);
     };
     return (

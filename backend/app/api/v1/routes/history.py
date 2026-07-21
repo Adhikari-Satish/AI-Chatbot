@@ -20,7 +20,7 @@ from app.models.user import User
 
 router = APIRouter(
     prefix="/history",
-    tags=["Chat History"]
+    tags=["History"]
 )
 
 @router.post("/new", response_model=ChatResponse)

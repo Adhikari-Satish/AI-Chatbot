@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.message import Message
+from app.core.auth import get_current_user
+from app.models.user import User
 
 
 def create_message(
@@ -64,6 +66,8 @@ def get_chat_history_for_ai(
 
 
     return chat_messages
+
+
 
 def get_messages(
         db,

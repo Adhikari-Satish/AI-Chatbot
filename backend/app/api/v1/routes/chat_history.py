@@ -9,23 +9,79 @@ from app.schemas.chat import ChatCreate, ChatResponse
 from app.services.chat_service import create_chat
 
 from app.core.auth import get_current_user
+from app.models.chat_history import ChatHistory
 
 
 router = APIRouter(
-    prefix="/chat",
+    prefix="/chat-history",
     tags=["Chat History"]
 )
 
-
-@router.post("/create", response_model=ChatResponse)
-def new_chat(
-    chat: ChatCreate,
+# Get all chats of logged-in user
+@router.get("/all")
+def get_chat_history(
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user = Depends(get_current_user)
 ):
 
-    return create_chat(
-        db=db,
-        title=chat.title,
-        user_id=current_user.id
+    chats = (
+        db.query(ChatHistory)
+        .filter(
+            ChatHistory.user_id == current_user.id
+        )
+        .order_by(
+            ChatHistory.created_at.desc()
+        )
+        .all()
     )
+
+    return chats
+
+@router.get("/{chat_id}")
+def get_single_chat(
+    chat_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    chat = (
+        db.query(ChatHistory)
+        .filter(
+            ChatHistory.id == chat_id,
+            ChatHistory.user_id == current_user.id
+        )
+        .first()
+    )
+
+    return chat
+
+@router.delete("/{chat_id}")
+def delete_chat(
+    chat_id:int,
+    db:Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+
+    chat = (
+        db.query(ChatHistory)
+        .filter(
+            ChatHistory.id == chat_id,
+            ChatHistory.user_id == current_user.id
+        )
+        .first()
+    )
+
+
+    if not chat:
+        return {
+            "message":"Chat not found"
+        }
+
+
+    db.delete(chat)
+    db.commit()
+
+
+    return {
+        "message":"Chat deleted successfully"
+    }

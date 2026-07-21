@@ -2,24 +2,19 @@ import { useState } from 'react'
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import { Routes, Route, Link } from "react-router-dom"
-import Chat from "./pages/Chat"
 import Dashboard from "./pages/Dashboard"
+import Chat from "./pages/Chat"
+import Profile from "./pages/Profile"
 import ProtectedRoute from "./components/ProtectedRoute"
 import './App.css'
-
 function App() {
-  // const [count, setCount] = useState(0)
 
   return (
-    <>
-      {/* <Link to="/register">Register</Link>
-      <Link to="/chat">Chat</Link>
-      <Link to="/dashboard">Dashboard</Link>
-      <Link to="/">Login</Link> */}
+  
       <Routes>
 
       <Route
-        path="/"
+        path="/login"
         element={<Login />}
       />
 
@@ -27,6 +22,7 @@ function App() {
         path="/register"
         element={<Register />}
       />
+      <Route path="profile" element={<Profile/>}/>
 
       <Route
         path="/chat"
@@ -34,7 +30,7 @@ function App() {
         />
 
       <Route
-        path="/dashboard"
+        path="/"
         element={
           <ProtectedRoute>
             <Dashboard />
@@ -43,7 +39,6 @@ function App() {
       />
 
     </Routes>
-    </>
   )
 }
 

@@ -49,7 +49,6 @@ Rules:
 """
 }
 
-
 def generate_response(messages: list)-> str:
     """
     Generate a response using the full conversation history.

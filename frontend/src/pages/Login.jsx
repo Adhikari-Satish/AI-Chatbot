@@ -28,7 +28,7 @@ export default function Login() {
                 res.data.access_token
             );
 
-            navigate("/chat");
+            navigate("/");
 
         } catch {
 

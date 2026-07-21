@@ -25,7 +25,18 @@ class UserLogin(BaseModel):
     # created_at: datetime
     
     # otp: str
+    
+class UserUpdate(BaseModel):
 
+    username: str
+    email: EmailStr
+
+
+
+class PasswordUpdate(BaseModel):
+
+    old_password: str
+    new_password: str
 
 class UserResponse(BaseModel):
 
@@ -35,7 +46,7 @@ class UserResponse(BaseModel):
 
     email: EmailStr
     
-    # created_at: datetime
+    created_at: datetime
 
 
     class Config:

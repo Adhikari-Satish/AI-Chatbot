@@ -30,6 +30,12 @@ class ChatResponse(BaseModel):
 
     class Config:
         from_attributes = True
+class ChatResponse1(BaseModel):
+    title: str
+    response: str
+
+    class Config:
+        from_attributes = True
         
 class MessageResponse(BaseModel):
     id: int

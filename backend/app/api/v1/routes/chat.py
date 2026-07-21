@@ -1,10 +1,18 @@
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.schemas.chat import (
     ChatCreate,
     ChatRename,
-    ChatResponse
+    ChatResponse,
+    ChatResponse1
+)
+from app.services.message_service import (
+    create_message,
+    get_chat_history_for_ai,
+    get_messages,
+    get_chat_messages
 )
 
 from app.services.chat_service import (
@@ -23,6 +31,7 @@ from app.core.auth import get_current_user
 
 from app.models.user import User
 from app.db.database import get_db
+from app.models import message
 
 router = APIRouter(
     prefix="/chat",
@@ -45,7 +54,18 @@ router = APIRouter(
 #     }
 
 
+@router.post("/create", response_model=ChatResponse)
+def new_chat(
+    chat: ChatCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
 
+    return create_chat(
+        db=db,
+        title=chat.title,
+        user_id=current_user.id
+    )
     
 @router.post("/{chat_id}/message")
 def chat(
@@ -84,33 +104,55 @@ def chat(
         "response":response
     }
 
-@router.post("/", response_model=ChatResponse)
+
+
+@router.post("/", response_model=ChatResponse1)
 def new_chat(
     data: ChatCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-
-    return create_chat(
+    current_user: User = Depends(get_current_user)):
+    chat=create_chat(
         db,
-        data.title,
-        current_user.id
-    )
-    
-@router.post("/create", response_model=ChatResponse)
-def new_chat(
-    chat: ChatCreate,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
-):
-
-    return create_chat(
-        db=db,
-        title=chat.title,
+        title=data.title,
         user_id=current_user.id
     )
+    # Save user message
+    create_message(
+        db=db,
+        chat_id=chat.id,
+        role="user",
+        content=data.title
+    )
+    history = get_chat_history_for_ai(
+        db,
+        chat.id
+        # user_id=current_user.id
+    )
+    # Generate AI response
+
+    ai_text = generate_response(
+        history
+    )
+    create_message(
+        db,
+        chat.id,
+        "assistant",
+        ai_text
+    )
+
+    chat = create_chat(
+        db=db,
+        title=data.title,
+        user_id=current_user.id
+    )
+
+    return {
+        "title": data.title,
+        "response": ai_text
+    }
     
-@router.get("/", response_model=list[ChatResponse])
+    
+@router.get("/get_all", response_model=list[ChatResponse])
 def all_chats(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
