@@ -8,11 +8,11 @@ function Profile(){
         loadProfile();
     },[]);
     const loadProfile=async()=>{
-        const res =await API.get("/users/profile");
+        const res =await API.get("/auth/profile");
         setUser(res.data);
     }
     const updateProfile=async()=>{
-        await API.put("/users/profile",{username:user.username,email:user.email});
+        await API.put("/auth/profile",{username:user.username,email:user.email});
         alert("Profile updated");
     }
     

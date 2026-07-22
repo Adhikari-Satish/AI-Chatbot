@@ -112,8 +112,6 @@ def update_profile(
 
     current_user.username = data.username
     current_user.email = data.email
-
-
     db.commit()
     db.refresh(current_user)
 

@@ -4,18 +4,20 @@ import { useState } from "react";
 // import ThemeToggle from "./ThemeToggle";
 
 function Navbar(){
-    const navigate = useNavigate();
-    const [open,setOpen]=useState(false);
+    // const navigate = useNavigate();
+    // const [open,setOpen]=useState(false);
+    const logout = ()=>{
+    localStorage.removeItem("token");
+    navigate("/login");
+};
 
     return(
     <div className="navbar">
-        {/* <h3>
-           AI Dashboard👋
-        </h3> */}
         <div className="user-menu">
-            <button onClick={()=>{localStorage.removeItem("token");
-                    window.location="/";}}>
-                    {/* navigate("/login");}} */}
+            {/* <button onClick={()=>{localStorage.removeItem("token").clear();
+                    window.location="/login";}}> */}
+                    {/* navigate("/login");}}> */}
+                <button onClick={logout}>
                     Logout
                 </button>
         {/* <button onClick={()=>setOpen(!open)}>👤</button>

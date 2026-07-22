@@ -69,9 +69,8 @@ function Register() {
         }
 
     return (
-
-        <div>
-
+        <div className="auth-container">
+        <div className="auth-card">
             <h1>Register</h1>
 
             <form onSubmit={handleSubmit}>
@@ -110,22 +109,23 @@ function Register() {
                 </button>
 
             </form>
-            { errors.email && <p style={{color:"red"}}>    {errors.email} </p>}
+            { errors.email && <p className="error">    {errors.email} </p>}
 
             {
                 errors.server &&
 
-                <p style={{color:"red"}}>
+                <p className="error">
                     {errors.server}
                 </p>
 
             }
-            <p>Already have account?&nbsp;&nbsp;
+            <p className="auth-link">Already have account?&nbsp;&nbsp;
              <Link to="/">
                  Login
             </Link></p>
             {/* <Link to="/">Login</Link> */}
 
+        </div>
         </div>
 
     );

@@ -13,30 +13,12 @@ function Chat(){
     };
     return (
     <div>
-
         <h1>AI Chatbot</h1>
-<input
-value={message}
-onChange={(e)=>setMessage(e.target.value)}
-placeholder="Ask something"
-/>
-
-
-<button onClick={sendMessage}>
-Send
-</button>
-
-
-<h3>
-{response}
-</h3>
-
-
-</div>
-
-);
-
-
+        <input value={message}  onChange={(e)=>setMessage(e.target.value)} placeholder="Ask something"/>
+        <button onClick={sendMessage}> Send</button>
+        <h3>{response}</h3>
+    </div>
+    );
 }
 
 
