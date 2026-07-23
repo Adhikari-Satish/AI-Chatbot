@@ -79,7 +79,7 @@ def send_message(
 
 
 
-@router.get("chats/{chat_id}/messages", response_model=ChatHistoryResponse)
+@router.get("/chats/{chat_id}/messages", response_model=ChatHistoryResponse)
 def history(
     chat_id:int,
     db: Session=Depends(get_db)):
@@ -93,6 +93,17 @@ def history(
     return {
         "chat_id": chat_id,
         "messages": messages
+    #     "messages":[
+    #     {
+    #         "role":"user",
+    #         "content":"Hello"
+    #     },
+    #     {
+    #         "role":"assistant",
+    #         "content":"Hi"
+    #     }
+    # ]
+
     }
 
     # return get_chat_messages(

@@ -5,11 +5,11 @@ from app.models import user
 from app.models.user import User
 from app.models.chat import Chat
 from app.models.message import Message
-from app.api.v1.routes import chat_history
+# from app.api.v1.routes import chat_history
 from app.api.v1.routes import auth
 from app.api.v1.routes import chat
 from app.api.v1.routes import stats
-from app.api.v1.routes import history
+# from app.api.v1.routes import history
 from app.api.v1.routes import message
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -41,10 +41,10 @@ app.include_router(
     tags=["Stats"]
 )
 
-app.include_router(
-    chat_history.router,
-    prefix="/api/v1"
-)
+# app.include_router(
+#     chat_history.router,
+#     prefix="/api/v1"
+# )
 
 
 app.include_router(
@@ -58,10 +58,10 @@ app.include_router(
     prefix="/api/v1"
 )
 
-app.include_router(
-    history.router,
-    prefix="/api/v1"
-)
+# app.include_router(
+#     history.router,
+#     prefix="/api/v1"
+# )
 
 app.include_router(
     message.router,

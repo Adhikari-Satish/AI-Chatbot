@@ -58,11 +58,11 @@ function Dashboard(){
     };
 
 
-    console.log("History:",chatHistory);
+//     console.log("History:",chatHistory);
 
-console.log("Current page:",page);
+// console.log("Current page:",page);
 
-console.log("Chat ID:",chatId);
+// console.log("Chat ID:",chatId);
     return(
     <div className="layout">
             <button className="mobmenu"
@@ -81,8 +81,13 @@ console.log("Chat ID:",chatId);
             <div className="dashboard">
             {page === "/" && (
             <>
-            <h1>AI Dashboard</h1>
+            <h1>🤖 AI Dashboard</h1>
             <ProfileCard user={user}/>
+            <div className="but">
+                <button onClick={createNewChat}>
+                    Ask AI Assistance ....
+                </button>
+            </div>
             <div className="cards">
               <StatCard title="total Chats" value={stats.total_chats} />
               <StatCard title="Documents" value={stats.documents} />
@@ -93,10 +98,15 @@ console.log("Chat ID:",chatId);
               <ChartCard />
               <Activity />
             </div>
+            
             </>
             )}
             {page === "profile" && <Profile />}
-            {page === "chat" && chatId && <ChatBox chatId={chatId} />}
+            {/* {page === "chat" && chatId && <ChatBox chatId={chatId}/>} */}
+            {page === "chat" && <ChatBox chatId={chatId} 
+            setChatId={setChatId}
+            chatHistory={chatHistory}
+            setChatHistory={setChatHistory}/>}           
             {page === "documents" && <Documents />}
             {page === "history" && <History />}
             

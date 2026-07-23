@@ -208,6 +208,17 @@ def update_chat(
 
     return chat
 
+@router.get("/{chat_id}/messages")
+def messages(
+    chat_id:int,
+    db:Session=Depends(get_db),
+    current_user:User=Depends(get_current_user)
+):
+
+    return get_messages(
+        db,
+        chat_id
+    )
 
 @router.delete("/{chat_id}")
 def remove_chat(

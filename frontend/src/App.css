@@ -16,6 +16,11 @@
 /* =========================
       SIDEBAR
 ========================= */
+.dashboard{
+    margin: 7px;
+    height:calc(100% - 14px);
+}
+
 .mobmenu{
     display:none;
 }
@@ -145,12 +150,13 @@
 ========================= */
 .main{
     margin-left:260px;
-    width:
-    calc(100% - 260px);
-    padding:5px;
+    width:calc(100% - 260px);
+    /* padding:5px; */
 }
 .main h1{
-    color:#333;
+    text-align: center;
+    
+    color:#b9b9b9;
     animation:
     fade .6s ease;
 }
@@ -174,7 +180,7 @@
 .navbar{
     height:60px;
     background:white;
-    border-radius:15px;
+    /* border-radius:15px; */
     display:flex;
     justify-content:flex-end;
     align-items:center;
@@ -182,7 +188,7 @@
     box-shadow:
     0 10px 30px
     rgba(0,0,0,.08);
-    margin-bottom:30px;
+    margin-bottom:10px;
     animation:navbar .6s ease;
 }
 
@@ -307,6 +313,7 @@
 .dashboard-grid{
     margin-top:30px;
     display:grid;
+    /* align-items: center; */
     grid-template-columns:
     2fr 1fr;
     gap:25px;
@@ -316,10 +323,39 @@
     background:white;
     border-radius:20px;
     padding:25px;
+    /* width: 100%; */
     box-shadow:
     0 10px 30px
     rgba(0,0,0,.08);
 }
+
+.but{
+    background: #5e5ecf6e;
+    margin: -10px;
+    padding: 40px;
+}
+.but button{
+    margin: 20px;
+    /* float: left; */
+    text-align: left;
+    padding-left: 20px;
+    width: calc(100% - 40px);
+    height: 60px;
+    color:#171616;
+    font-size: 20px;
+    border:1px solid #525252;
+    background: white;
+    border-radius: 40px;
+}
+.but button:hover{
+    box-shadow: 5px 4px 10px;
+    scale: 1.02;
+    transition: 0.2;
+}
+
+/* .chart-card{
+    width: 80%;
+} */
 
 /* =========================
        MOBILE MENU BUTTON
@@ -339,6 +375,15 @@
     grid-template-columns:1fr;
 }
 }
+/* @media(max-width:1100px){
+.cards{
+    grid-template-columns:1fr;
+}
+.dashboard-grid{
+    grid-template-columns:1fr;
+}
+} */
+
 @media(max-width:900px){
 .sidebar{
     padding-top: 65px;
@@ -353,8 +398,8 @@
 .mobmenu{
     display:block;
     position:fixed;
-    top:10px;
-    left:15px;
+    top:5px;
+    left:10px;
     z-index:2000;
     border:none;
     background:#667eea;
