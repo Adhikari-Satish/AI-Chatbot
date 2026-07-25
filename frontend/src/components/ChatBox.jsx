@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
-
+import add from "../assets/add.png";
+import arrowupload from "../assets/arrowupload.png";
+import arrowload from "../assets/arrowload.png";
 
 function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
     const [messages, setMessages] = useState([]);
@@ -120,6 +122,10 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
                 )}
             </div>
             <div className="chat-input">
+                <div className="search">
+                {/* <img src={add}
+                    alt="menu"
+                    className="cima1" /> */}
                 <textarea rows={1}
                     type="text"
                     value={content}
@@ -137,13 +143,34 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
                         }
                     }}
                 />
+                {/* <button
+                    onClick={sendMessage}
+                    disabled={loading}
+                >
+                    {loading ? <img src={arrowload}
+                    alt="menu" className="cima2" /> 
+                    : <img src={arrowupload}
+                    alt="menu" className="cima2" />}
+                </button> */}
+                </div>
+                <div className="sic">
+                <img src={add}
+                    alt="menu"
+                    className="cima1" />
+                    </div>
+                <div className={`sic1 ${loading ? "disabled" : ""}`}>
                 <button
                     onClick={sendMessage}
                     disabled={loading}
                 >
-                    {loading ? "Sending..." : "Send"}
+                    {loading ? <img src={arrowload}
+                    alt="menu" className="cima2" /> 
+                    : <img src={arrowupload}
+                    alt="menu" className="cima2" />}
                 </button>
+                </div>
             </div>
+            
         </div>
     );
 }

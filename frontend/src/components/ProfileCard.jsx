@@ -1,7 +1,8 @@
 
 import React from "react";
 
-function ProfileCard({ user = {} }) {
+function ProfileCard({ user ={} }) {
+    console.log("PROFILE CARD USER:", user);
     return (
         <div className="profile-card">
 

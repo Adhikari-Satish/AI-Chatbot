@@ -112,6 +112,7 @@
     display: flex;
     gap:0px
 }
+
 .ima2{
     filter:none;
     height:20px;
@@ -177,6 +178,7 @@
     background: #ff0000;
 } */
 
+
 .naima1:hover .naima{
     color: red;
     filter: brightness(0) saturate(100%) invert(10%) sepia(80%) saturate(7470%) hue-rotate(356deg) brightness(90%) contrast(100%); 
@@ -191,6 +193,34 @@
     margin-left: 5px;
     border: none;
     text-align: center;
+}
+
+.dima1{
+    filter:none;
+    margin-right: 15px;
+    /* padding-top: 10px; */
+    /* margin-bottom: -2px; */
+    margin: 10px;
+    height: 35px;
+    width:35px;
+    color: black;
+    cursor: pointer;
+    float: inline-start;
+}
+.but h4{
+    padding-top: 17px;
+    color: #5b5d62;
+    /* background: #111827; */
+}
+.dima2{
+    filter:none;
+    margin: -30px;
+    height:35px;
+    width:35px;
+    color: black;
+    cursor: pointer;
+    float: right;
+    margin-right: 20px;
 }
 .sidebar button{
     padding:10px;
@@ -361,6 +391,7 @@
 .profile-card{
     background:white;
     padding:25px;
+    width:100%;
     border-radius:20px;
     display:flex;
     gap:20px;
@@ -370,6 +401,18 @@
     rgba(0,0,0,.08);
     animation:
     fade .8s ease;
+}
+.profile-card h3,
+.profile-card p {
+    margin: 5px 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+}
+.profile-card p {
+    max-width: 250px;
+    overflow-wrap: anywhere;
 }
 .avatar{
     height:70px;
@@ -457,14 +500,18 @@
 .but{
     background: #e4e4eb;
     /* margin: 0px; */
-    margin-top:10px;
+    margin-top:  10px;
     border-radius: 10px;
     padding: 40px;
+    
+    
 }
 .but button{
     margin: 20px;
-    /* float: left; */
+    /* display:inline-flex; */
+    /* width:100%; */
     text-align: left;
+    /* flex-direction: column; */
     padding-left: 20px;
     width: calc(100% - 40px);
     height: 60px;
@@ -474,6 +521,7 @@
     background: white;
     border-radius: 40px;
 }
+
 .but button:hover{
     box-shadow: 1px 1px 8px 1px;
     scale: 1.001;

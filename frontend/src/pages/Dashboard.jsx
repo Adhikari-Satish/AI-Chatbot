@@ -10,6 +10,10 @@ import ChatBox from "../components/ChatBox";
 import Profile from "./Profile";
 import ChartCard from "../components/ChartCard";
 import App from "../App";
+import add from "../assets/add.png";
+import arrowupload from "../assets/arrowupload.png";
+import arrowload from "../assets/arrowload.png";
+
 function Dashboard(){
     // const [messages, setMessages] = useState([]);
     const [user,setUser]=useState({});
@@ -27,6 +31,7 @@ function Dashboard(){
         async function fetchData(){
             try{
             const profile =await API.get("/auth/profile");
+            console.log("PROFILE DATA:", profile.data);
             setUser(profile.data);
             const dashboard =await API.get("/stats");
             setStats(dashboard.data);
@@ -90,7 +95,13 @@ function Dashboard(){
             <ProfileCard user={user}/>
             <div className="but">
                 <button onClick={createNewChat}>
-                    Ask AI Assistance ....
+                    <img src={add}
+                         alt="menu"
+                         className="dima1" />
+                    <h4>Ask AI Assistance ....</h4>
+                    <img src={arrowupload}
+                         alt="menu"
+                         className="dima2" />
                 </button>
             </div>
             <div className="cards">
@@ -106,7 +117,7 @@ function Dashboard(){
             
             </>
             )}
-            {page === "profile" && <Profile />}
+            {page === "profile" && <Profile user={user} setUser={setUser} setPage={setPage}/>}
             {/* {page === "chat" && chatId && <ChatBox chatId={chatId}/>} */}
             {page === "chat" && <ChatBox chatId={chatId} 
             setChatId={setChatId}

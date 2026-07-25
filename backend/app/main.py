@@ -13,6 +13,7 @@ from app.api.v1.routes import stats
 from app.api.v1.routes import message
 from fastapi.middleware.cors import CORSMiddleware
 
+
 Base.metadata.create_all(
     bind=engine
 )

@@ -85,22 +85,27 @@ def register(
 
 @router.get("/profile")
 def get_profile(
-    db: Session = Depends(get_db)
+    # db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user)
 ):
 
-    user = db.query(User).first()
+    # user = db.query(User).first()
 
-    if not user:
-        return {
-            "username": "Guest",
-            "email": "guest@example.com"
-        }
+    if not current_user:
+        # return {
+        #             "username": "Guest",
+        #             "email": "guest@example.com"
+        #         }
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
 
 
     return {
-        "id": user.id,
-        "username": user.username,
-        "email": user.email
+        "id": current_user.id,
+        "username": current_user.username,
+        "email": current_user.email
     }
 
 @router.put("/profile")
@@ -109,7 +114,19 @@ def update_profile(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
+    # Check email already exists for another user
+    existing_email = db.query(User).filter(
+        User.email == data.email,
+        User.id != current_user.id
+    ).first()
 
+    if existing_email:
+        raise HTTPException(
+            status_code=400,
+            detail="Email already exists"
+        )
+        
+    
     current_user.username = data.username
     current_user.email = data.email
     db.commit()
