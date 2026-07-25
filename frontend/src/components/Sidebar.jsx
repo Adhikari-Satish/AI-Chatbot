@@ -1,19 +1,74 @@
 
 import React from "react";
-import { useState } from "react";
-import image from "../assets/image.png";
+import { useState, useEffect } from "react";
+import image from "../assets/add.png";
+import threedots from "../assets/threedots.png";
+import {
+    renameChat,
+    deleteChat
+} from "../services/chat";
+// import api from "../services/api";
 
-
-function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat}){
+function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat, setChatHistory,currentChatId, setCurrentChatId}){
+    // const navigate = useNavigate();
+    const [menuOpen, setMenuOpen] = useState(null);
     const changePage = (name) => {
         setPage(name);
         setOpen(false);
     };
+    const changethreedots = (name) => {
+        setPage(name);
+        // setOpen(false);
+    };
     const openChat=(chat)=>{
       setChatId(chat.id);
+      setCurrentChatId(chat.id);
       setPage("chat");
       setOpen(false);
     };
+    useEffect(() => {
+    if(currentChatId){
+        console.log("Current chat:", currentChatId);
+    }
+    }, [currentChatId]);
+    const handleDelete = async (chatId) => {
+    try {
+        await deleteChat(chatId);
+        setChatHistory(prev =>
+            prev.filter(chat => chat.id !== chatId)
+        );
+        // console.log(chatId)
+        // console.log(currentChatId)
+        // If deleted chat is open
+        if (chatId === currentChatId) {
+            setChatId(null);
+            setCurrentChatId(null)
+            setPage("/");
+            // console.log("Deleting chat:", currentChatId);
+        }
+
+    } catch (err) {
+        // alert("delete failed");
+        console.log(err.response?.data || err);
+    }
+  };
+  const handleRename = async (chatId) => {
+    const newTitle = prompt("Enter new chat title");
+    if (!newTitle) return;
+    try {
+        await renameChat(chatId, newTitle);
+        setChatHistory(prev =>
+            prev.map(chat =>
+                chat.id === chatId
+                    ? { ...chat, title: newTitle }
+                    : chat
+            )
+        );
+    } catch (err) {
+        alert("Rename failed");
+        // console.log(err.response?.data || err);
+    }
+  };
     return (
     <div className="sidebar">
         <button onClick={() => changePage("/")}>
@@ -29,7 +84,7 @@ function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat}
       <button onClick={() => changePage("history")}>
         History
       </button>
-      <button onClick={createNewChat}>
+      <button onClick={createNewChat} className="ima1">
        <img src={image} className="ima" alternae="im"></img> New chat
       </button>
 
@@ -48,9 +103,74 @@ function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat}
           openChat(chat)
           }
           title={chat.title}
+
           >
             
             {chat.title}
+            <div className="both">
+            <span className="ima2"
+              onClick={(e) => {
+                e.stopPropagation();
+                // changethreedots("profile");
+                handleRename(chat.id);
+                // setMenuOpen(null);
+              }}
+            >
+              ✏️
+            </span>
+
+            <span className="ima3"
+              onClick={(e) => {
+                e.stopPropagation();
+                // changethreedots("/");
+                handleDelete(chat.id);
+                // setMenuOpen(null);
+              }}
+            >
+              🗑
+            </span>
+            </div>
+          {/* <div className="menu-container">
+          <img
+          src={threedots}
+          alt="menu"
+          className="ima2"
+          onClick={(e) => {
+            e.stopPropagation();
+            setMenuOpen(menuOpen === chat.id ? null : chat.id);
+          }}
+          />
+
+          {menuOpen === chat.id && (
+          <div
+            className="menu-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => {
+                renameChat(chat.id);
+                setMenuOpen(null);
+              }}
+            >
+              ✏️ Rename
+            </button>
+
+            <button
+              onClick={() => {
+                deleteChat(chat.id);
+                setMenuOpen(null);
+              }}
+            >
+              🗑 Delete
+            </button>
+          </div>
+          )}
+          </div> */}
+            {/* <img src={threedots} className="ima2" alternae="im" 
+            onClick={(e) => {
+              e.stopPropagation(); 
+              changethreedots("/")}}>
+            </img> */}
           </button>
         )):<p>No chats available</p>
         }

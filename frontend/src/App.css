@@ -68,9 +68,128 @@
     to{  transform:translateX(0);
     }
 }
-.sidebar .ima{
-    height:15px;
-    width:15px;
+
+.ima{
+    filter: invert(1);
+    /*red filter: brightness(0) saturate(100%) invert(23%) sepia(92%) saturate(7476%) hue-rotate(356deg) brightness(95%) contrast(117%);  */
+    height:25px;
+    margin: -5px;
+    width:25px;
+    margin-right: 0px;
+    border: none;
+    text-align: center;
+}
+.ima1:hover .ima{
+    /* filter:none; */
+    /* black */
+    /* filter: invert(100%); white */
+    /*red filter: brightness(0) saturate(100%) invert(18%) sepia(98%) saturate(7497%) hue-rotate(357deg) brightness(95%) contrast(117%); */
+    filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(3200%) hue-rotate(212deg) brightness(98%) contrast(103%);
+    /*green filter: brightness(0) saturate(100%) invert(48%) sepia(88%) saturate(1030%) hue-rotate(81deg) brightness(95%) contrast(92%); */
+}
+
+
+/* .ima2{
+    filter: invert(1);
+    height:20px;
+    margin-right:-15px;
+    margin-top:-10px;
+    margin-bottom:-10px;
+    width:20px;
+    cursor: pointer;
+    float: inline-end;
+    border: none;
+    text-align: center;
+} */
+.history-item:hover .both{
+    overflow: visible;
+
+}
+.both{margin-right:-36px;
+    cursor: pointer;
+    float: inline-end;
+    /* display: none; */
+    display: flex;
+    gap:0px
+}
+.ima2{
+    filter:none;
+    height:20px;
+    width:20px;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+}
+.ima3{
+    filter: none;
+    height:20px;
+    width:20px;
+    color: red;
+    cursor: pointer;
+    text-align: center;
+}
+/* .menu-container{
+    position: relative;
+    overflow:visible;
+} */
+
+/* .menu-popup {
+    position: absolute;
+    right: -110px;
+    top:50%;
+    height:max-content;
+    padding-top: 1px;
+    cursor: pointer;
+    min-width:  150px;
+    overflow-y:visible;
+    overflow-x: visible;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    z-index:99999;
+    display: flex;
+    gap: 5px;
+    color: black;
+    flex-direction: column;
+    overflow: visible;
+    
+}
+
+.menu-popup button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    margin: 3px;
+    color: black;
+    background:rgb(118, 117, 117);
+    padding: 10px;
+    scale: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 15px;
+    height: 30px;
+    filter: invert(1);
+    transition: background 0.2s;
+}
+
+.menu-popup button:hover {
+    background: #ff0000;
+} */
+
+.naima1:hover .naima{
+    color: red;
+    filter: brightness(0) saturate(100%) invert(10%) sepia(80%) saturate(7470%) hue-rotate(356deg) brightness(90%) contrast(100%); 
+}
+
+.naima{
+    filter: invert(1);
+    /*red filter: brightness(0) saturate(100%) invert(23%) sepia(92%) saturate(7476%) hue-rotate(356deg) brightness(95%) contrast(117%);  */
+    height:25px;
+    margin: -7px;
+    width:25px;
+    margin-left: 5px;
+    border: none;
     text-align: center;
 }
 .sidebar button{
@@ -88,31 +207,37 @@
 .sidebar button:hover{
     background:white;
     color:#667eea;
+    /* height: min-content; */
     transform:
     translateX(3px);
 }
 
+
 .history-list{
     display: flex;
     gap:5px;
-    /* flex:1; */
     background: transparent;
     flex-direction: column;
     overflow-y: auto;
-    /* height: 400px; */
-    overflow-x: hidden;
+    overflow-x: visible;
+    /* transform: translateX(-30%); */
 }
 .history-list button{
-    /* padding: 8px; */
     font-size: 14px;
     border-radius: 5px;
+    /* position:relative; */
     cursor: pointer;
+    height: 30px;
     text-align: left;
     background: transparent;
-    width: 95%;
+    width: calc(100% - 6px);
     border: none;
-    padding: 10px 5px 18px 5px; 
-    line-height: 10px;
+    padding-top: 15px;
+    padding-bottom:15px;
+    padding-left: 7px;
+    /* padding-right: 15px; */
+    padding-right: 35px;
+    line-height: 1px;
     /* Keep text on one line */
     white-space: nowrap;
     /* Hide overflowing text */
@@ -330,8 +455,10 @@
 }
 
 .but{
-    background: #5e5ecf6e;
-    margin: -10px;
+    background: #e4e4eb;
+    /* margin: 0px; */
+    margin-top:10px;
+    border-radius: 10px;
     padding: 40px;
 }
 .but button{
@@ -348,9 +475,9 @@
     border-radius: 40px;
 }
 .but button:hover{
-    box-shadow: 5px 4px 10px;
-    scale: 1.02;
-    transition: 0.2;
+    box-shadow: 1px 1px 8px 1px;
+    scale: 1.001;
+    transition: 0.01;
 }
 
 /* .chart-card{
@@ -406,7 +533,7 @@
     color:white;
     font-size:25px;
     border-radius:10px;
-    padding:8px 15px;
+    padding:5px 12px;
 }
 .sidebar-container{
     position:fixed;

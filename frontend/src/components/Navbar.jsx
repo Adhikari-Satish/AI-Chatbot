@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import image from "../assets/logout.png";
+
 // import ThemeToggle from "./ThemeToggle";
 
 function Navbar(){
@@ -17,8 +19,9 @@ function Navbar(){
             {/* <button onClick={()=>{localStorage.removeItem("token").clear();
                     window.location="/login";}}> */}
                     {/* navigate("/login");}}> */}
-                <button onClick={logout}>
+                <button onClick={logout} className="naima1">
                     Logout
+                    <img src={image} className="naima" alternae="im"></img>
                 </button>
         {/* <button onClick={()=>setOpen(!open)}>👤</button>
         {open && (

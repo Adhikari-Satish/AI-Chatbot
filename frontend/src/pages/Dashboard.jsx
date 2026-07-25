@@ -16,6 +16,7 @@ function Dashboard(){
     const [open,setOpen]=useState(false);
     const [page, setPage] = useState("/");
     const [chatId, setChatId] = useState(null);
+    const [currentChatId, setCurrentChatId] = useState(null);
     const [chatHistory, setChatHistory] = useState([]);
     const [stats,setStats]=useState({
         total_chats:0,
@@ -44,6 +45,7 @@ function Dashboard(){
         const res = await API.post("/chat/create",{title:"New Chat"});
         console.log("CREATE CHAT RESPONSE:",res.data);
         setChatId(res.data.id);
+        setCurrentChatId(res.data.id)
         setChatHistory(prev => [
             res.data,
             ...prev
@@ -74,7 +76,10 @@ function Dashboard(){
             <Sidebar page={page} setPage={setPage} setOpen={setOpen} 
             chatHistory={chatHistory}
             setChatId={setChatId}
-            createNewChat={createNewChat}/>
+            createNewChat={createNewChat}
+            setChatHistory={setChatHistory}
+            currentChatId={currentChatId}
+            setCurrentChatId={setCurrentChatId}/>
             </div>
         <div className="main">
             <Navbar/>
