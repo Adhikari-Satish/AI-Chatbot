@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { register } from "../services/auth.js";
 import { Link, useNavigate } from "react-router-dom";
+import eye from "../assets/eye.png";
+import eyeOff from "../assets/eye-off.png";
 
 function Register() {
-
+    const [showPassword, setShowPassword] = useState(false);
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -93,9 +96,10 @@ function Register() {
                     required
                 />
                 {/* { errors.email && <p style={{color:"red"}}>    {errors.email} </p>} */}
+                <div className="password-box">
                 <input
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     minLength={6}
                     // pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
                     value={form.password}
@@ -103,7 +107,13 @@ function Register() {
                     onChange={handleChange}
                     required
                 />
-
+                <img
+                        src={showPassword ? eyeOff : eye}
+                        alt="toggle password"
+                        className="eye-img"
+                        onClick={() => setShowPassword(!showPassword)}
+                         />
+                 </div>
                 <button>
                     Register
                 </button>

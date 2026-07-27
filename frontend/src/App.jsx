@@ -5,6 +5,7 @@ import { Routes, Route, Link, BrowserRouter } from "react-router-dom"
 import Dashboard from "./pages/Dashboard"
 import ProtectedRoute from "./components/ProtectedRoute"
 import './App.css'
+import ForgotPassword from './pages/ForgotPassword'
 function App() {
 
   return (
@@ -18,6 +19,10 @@ function App() {
       <Route
         path="/register"
         element={<Register />}
+      />
+      <Route
+        path="/forgot"
+        element={<ForgotPassword />}
       />
       {/* <Route path="profile" element={<Profile/>}/> */}
       <Route

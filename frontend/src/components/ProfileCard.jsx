@@ -4,7 +4,7 @@ import React from "react";
 function ProfileCard({ user ={} }) {
     console.log("PROFILE CARD USER:", user);
     return (
-        <div className="profile-card">
+        <div className="profilecard">
 
             <div className="avatar">
                 {user.username ? user.username.charAt(0).toUpperCase() : "U"}

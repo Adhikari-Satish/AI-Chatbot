@@ -190,3 +190,66 @@ a {
         transform:translateX(0);
     }
 }
+.forgot-page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f3f4f6;
+}
+.forgot-card{
+width:380px;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.forgot-card h1{
+text-align:center;
+margin-bottom:25px;
+}
+.forgot-card input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:8px;
+border:1px solid #ccc;
+box-sizing:border-box;
+}
+.forgot-card button{
+width:100%;
+padding:12px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:15px;
+}
+.password-box{
+position:relative;
+}
+.password-box input{
+padding-right:45px;
+}
+.eye-img{
+position:absolute;
+right:12px;
+top:12px;
+width:22px;
+height:22px;
+cursor:pointer;
+}
+.error{
+/* background:#fee2e2; */
+color:#b91c1c;
+padding:10px;
+text-align: center;
+border-radius:8px;
+}
+.success{
+background:#dcfce7;
+color:#15803d;
+padding:10px;
+border-radius:8px;
+}

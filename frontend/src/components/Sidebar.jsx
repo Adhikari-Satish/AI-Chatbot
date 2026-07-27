@@ -93,6 +93,7 @@ function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat,
       <div className="history-list">
         {chatHistory && chatHistory.length > 0 ?
         chatHistory.map(chat=>(
+          <div className="history-wrapper" key={chat.id}>
           <button key={chat.id} className="history-item" onClick={()=>
           //   {
           //   setChatId(chat.id);
@@ -105,15 +106,13 @@ function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat,
           title={chat.title}
 
           >
-            
-            {chat.title}
-            <div className="both">
+
+            {/* {chat.title} */}
+            {/* <div className="both">
             <span className="ima2"
               onClick={(e) => {
                 e.stopPropagation();
-                // changethreedots("profile");
                 handleRename(chat.id);
-                // setMenuOpen(null);
               }}
             >
               ✏️
@@ -121,57 +120,57 @@ function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat,
 
             <span className="ima3"
               onClick={(e) => {
-                e.stopPropagation();
-                // changethreedots("/");
-                handleDelete(chat.id);
-                // setMenuOpen(null);
+                e.stopPropagation();                
+                handleDelete(chat.id);               
               }}
             >
               🗑
             </span>
-            </div>
-          {/* <div className="menu-container">
+            </div> */}
+            <span className="chat-title">
+            {chat.title}
+            </span>
           <img
           src={threedots}
           alt="menu"
-          className="ima2"
+          className="threedot"
           onClick={(e) => {
             e.stopPropagation();
             setMenuOpen(menuOpen === chat.id ? null : chat.id);
           }}
           />
-
+          </button>
           {menuOpen === chat.id && (
           <div
-            className="menu-popup"
+            className="history-dropdown"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
+            <div className="dropdown-item"
               onClick={() => {
-                renameChat(chat.id);
+                handleRename(chat.id);
                 setMenuOpen(null);
               }}
             >
               ✏️ Rename
-            </button>
+            </div>
 
-            <button
+            <div className="dropdown-item delete"
               onClick={() => {
-                deleteChat(chat.id);
+                handleDelete(chat.id);  
                 setMenuOpen(null);
               }}
             >
               🗑 Delete
-            </button>
+            </div>
           </div>
           )}
-          </div> */}
             {/* <img src={threedots} className="ima2" alternae="im" 
             onClick={(e) => {
               e.stopPropagation(); 
               changethreedots("/")}}>
             </img> */}
-          </button>
+          {/* </button> */}
+          </div>
         )):<p>No chats available</p>
         }
       </div>

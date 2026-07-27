@@ -1,15 +1,8 @@
 import random
-
 from datetime import datetime, timedelta
-
 from sqlalchemy.orm import Session
-
 from app.models.otp import OTP
-
-
-
 def generate_otp():
-
     return str(
         random.randint(
             100000,
@@ -17,27 +10,17 @@ def generate_otp():
         )
     )
 
-
-
 def save_otp(
     db: Session,
     email: str
-):
-
+    ):
     otp = generate_otp()
-
-
     otp_record = OTP(
         email=email,
         otp=otp
     )
-
-
     db.add(otp_record)
-
     db.commit()
-
-
     return otp
 
 
@@ -47,7 +30,6 @@ def verify_otp(
     email: str,
     otp: str
 ):
-
     record = (
         db.query(OTP)
         .filter(
@@ -56,11 +38,6 @@ def verify_otp(
         )
         .first()
     )
-
-
     if record:
-
         return True
-
-
     return False

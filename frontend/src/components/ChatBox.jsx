@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import API from "../services/api";
 import add from "../assets/add.png";
 import arrowupload from "../assets/arrowupload.png";
@@ -8,6 +8,8 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const textareaRef = useRef(null);
 
     console.log("Current Chat ID:", chatId );
 
@@ -29,7 +31,7 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
     };
 
     const sendMessage = async () => {
-        if (content.trim() === "") return;
+        if (!content.trim()) return;
         const userMessage = content;
         setLoading(true);
         try {
@@ -93,8 +95,11 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
             );
 
         }
-
-            setContent("");
+        setContent("");
+        // reset textarea height
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "50px";
+        }
         } catch (err) {
             console.log(err);
         }
@@ -126,7 +131,9 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
                 {/* <img src={add}
                     alt="menu"
                     className="cima1" /> */}
-                <textarea rows={1}
+                <textarea 
+                    ref={textareaRef}
+                    rows={1}
                     type="text"
                     value={content}
                     placeholder="Type your message..."
@@ -143,6 +150,16 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
                         }
                     }}
                 />
+                <button
+                className={`send-btn ${loading ? "disabled" : ""}`}
+                onClick={sendMessage}
+                disabled={loading}
+                 >
+                {loading 
+                ? <img src={arrowload} alt="loading" />
+                 : <img src={arrowupload} alt="send" />
+                }
+                </button>
                 {/* <button
                     onClick={sendMessage}
                     disabled={loading}
@@ -156,9 +173,23 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
                 <div className="sic">
                 <img src={add}
                     alt="menu"
-                    className="cima1" />
-                    </div>
-                <div className={`sic1 ${loading ? "disabled" : ""}`}>
+                    className="cima1" 
+                    onClick={() => setMenuOpen(!menuOpen)}/>
+                    {menuOpen && (
+                        <div className="add-menu">
+                             <div className="menu-item">
+                             📄 Upload File
+                              </div>
+                             <div className="menu-item">
+                                🖼 Upload Image
+                              </div>
+                               <div className="menu-item">
+                              📊 Analyze Data
+                               </div>
+                        </div>
+                    )}
+                </div>
+                {/* <div className={`sic1 ${loading ? "disabled" : ""}`}>
                 <button
                     onClick={sendMessage}
                     disabled={loading}
@@ -168,7 +199,7 @@ function ChatBox({ chatId, setChatId, chatHistory, setChatHistory }) {
                     : <img src={arrowupload}
                     alt="menu" className="cima2" />}
                 </button>
-                </div>
+                </div> */}
             </div>
             
         </div>

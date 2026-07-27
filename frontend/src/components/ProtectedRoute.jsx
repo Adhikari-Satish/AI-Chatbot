@@ -23,7 +23,7 @@ function ProtectedRoute({children}){
         async function verifyToken(){
             const token = localStorage.getItem("token");
             if (!token) {
-                setAuthenticated(false);
+                setValid(false);
                 setLoading(false);
                 return;
             }

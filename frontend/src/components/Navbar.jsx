@@ -6,13 +6,11 @@ import image from "../assets/logout.png";
 // import ThemeToggle from "./ThemeToggle";
 
 function Navbar(){
-    // const navigate = useNavigate();
-    // const [open,setOpen]=useState(false);
+    const navigate = useNavigate();
     const logout = ()=>{
     localStorage.removeItem("token");
     navigate("/login");
 };
-
     return(
     <div className="navbar">
         <div className="user-menu">
@@ -23,21 +21,7 @@ function Navbar(){
                     Logout
                     <img src={image} className="naima" alternae="im"></img>
                 </button>
-        {/* <button onClick={()=>setOpen(!open)}>👤</button>
-        {open && (
-            <div className="dropdown">
-                <button onClick={()=>navigate("/profile")}>
-                    Profile
-                </button>
-               
-                <button onClick={()=>{localStorage.removeItem("token");
-                    window.location="/";}}>
-                    Logout
-                </button>
-            </div>
-        )} */}
-
-    </div>
+        </div>
     </div>
 
     )

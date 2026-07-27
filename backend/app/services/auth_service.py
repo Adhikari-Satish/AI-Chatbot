@@ -33,8 +33,6 @@ def create_user(
         )
 
     hashed = hash_password(password)
-
-
     user = User(
         username=username,
         email=email,
@@ -67,23 +65,23 @@ def authenticate_user(
     email,
     password
 ):
-
     user = (
         db.query(User)
         .filter(User.email == email)
         .first()
     )
-
-
     if not user:
-        return None
+        # return None
+        return "email_not_found"
 
 
     if not verify_password(
         password,
         user.password
     ):
-        return None
+        # return  None
+        return  "invalid_password"
+
     # token = create_access_token(
     #     {
     #         "sub": str(user.id)
@@ -92,35 +90,35 @@ def authenticate_user(
     
     return user
     # return {
+    #     "user": user
+    # }
+    # return {
     #     "access_token": token,
     #     "token_type": "bearer"
     # }
-
-
 
 def login_user(
     db: Session,
     email,
     password
 ):
-
-    user = authenticate_user(
+    result = authenticate_user(
         db,
         email,
         password
     )
-
-
-    if not user:
-        return None
-
-
+    # if not user:
+    #     return None
+    if result == "email_not_found":
+        return "email_not_found"
+    if result == "invalid_password":
+        return "invalid_password"
+    
+    user = result
     token = create_access_token(
         {
             "sub": str(user.id),
             "email": user.email
         }
     )
-
-
     return token

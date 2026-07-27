@@ -13,6 +13,7 @@ import App from "../App";
 import add from "../assets/add.png";
 import arrowupload from "../assets/arrowupload.png";
 import arrowload from "../assets/arrowload.png";
+import ForgotPassword from "./ForgotPassword";
 
 function Dashboard(){
     // const [messages, setMessages] = useState([]);
@@ -124,6 +125,7 @@ function Dashboard(){
             chatHistory={chatHistory}
             setChatHistory={setChatHistory}/>}           
             {page === "documents" && <Documents />}
+            {page === "forgot" && <ForgotPassword />}
             {page === "history" && <History />}
             
             </div>

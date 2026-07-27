@@ -88,27 +88,93 @@
     /*green filter: brightness(0) saturate(100%) invert(48%) sepia(88%) saturate(1030%) hue-rotate(81deg) brightness(95%) contrast(92%); */
 }
 
-
-/* .ima2{
-    filter: invert(1);
-    height:20px;
-    margin-right:-15px;
-    margin-top:-10px;
-    margin-bottom:-10px;
-    width:20px;
-    cursor: pointer;
-    float: inline-end;
-    border: none;
-    text-align: center;
+/* .history-item:hover .both{
+    opacity: 1;
+    visibility: visible;
 } */
-.history-item:hover .both{
-    overflow: visible;
 
+.history-list{
+    height: 100vh;
 }
-.both{margin-right:-36px;
+.history-wrapper{
+    position:relative;
+    width:100%;
+}
+.history-item{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px;
+    border:none;
+    background:transparent;
+    border-radius:8px;
+    cursor:pointer;
+}
+.chat-title{
+    /* width: calc(100% - 10%); */
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    flex:1;
+    line-height: 1;
+    text-align:left;
+}
+
+
+/* three dots image */
+
+.threedot{
+    /* width: 100%;
+    right: 0px; */
+    margin-right: -30px;
+    text-align:right;
+    width:22px;
+    height:22px;
+    cursor:pointer;
+    opacity:0;
+    transition:.2s;
+}
+
+/* show dots when hover */
+
+.history-item:hover .threedot{
+    opacity:1;
+}
+/* Dropdown */
+
+.history-dropdown{
+    position:absolute;
+    right:0px;
+    top:30px;
+    width:130px;
+    background:white;
+    border-radius:10px;
+    box-shadow:
+    0 5px 20px rgba(0,0,0,0.15);
+    z-index:999;
+    padding:6px 0;
+}
+.dropdown-item{
+    /* margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 10px; */
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:14px;
+}
+.dropdown-item:hover{
+    /* background:#f1f5f9; */
+    background: #dbdada;
+}
+.delete{
+    color:red;
+}
+
+/* .both{margin-right:-36px;
     cursor: pointer;
     float: inline-end;
-    /* display: none; */
+    visibility: hidden;
     display: flex;
     gap:0px
 }
@@ -129,56 +195,10 @@
     cursor: pointer;
     text-align: center;
 }
-/* .menu-container{
-    position: relative;
-    overflow:visible;
+.ima2:hover,
+.ima3:hover {
+    transform: scale(1.1);
 } */
-
-/* .menu-popup {
-    position: absolute;
-    right: -110px;
-    top:50%;
-    height:max-content;
-    padding-top: 1px;
-    cursor: pointer;
-    min-width:  150px;
-    overflow-y:visible;
-    overflow-x: visible;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
-    z-index:99999;
-    display: flex;
-    gap: 5px;
-    color: black;
-    flex-direction: column;
-    overflow: visible;
-    
-}
-
-.menu-popup button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    margin: 3px;
-    color: black;
-    background:rgb(118, 117, 117);
-    padding: 10px;
-    scale: none;
-    text-align: left;
-    cursor: pointer;
-    font-size: 15px;
-    height: 30px;
-    filter: invert(1);
-    transition: background 0.2s;
-}
-
-.menu-popup button:hover {
-    background: #ff0000;
-} */
-
-
 .naima1:hover .naima{
     color: red;
     filter: brightness(0) saturate(100%) invert(10%) sepia(80%) saturate(7470%) hue-rotate(356deg) brightness(90%) contrast(100%); 
@@ -244,18 +264,17 @@
 
 
 .history-list{
+    height: 100vh;
     display: flex;
     gap:5px;
     background: transparent;
     flex-direction: column;
     overflow-y: auto;
     overflow-x: visible;
-    /* transform: translateX(-30%); */
 }
 .history-list button{
     font-size: 14px;
     border-radius: 5px;
-    /* position:relative; */
     cursor: pointer;
     height: 30px;
     text-align: left;
@@ -265,14 +284,10 @@
     padding-top: 15px;
     padding-bottom:15px;
     padding-left: 7px;
-    /* padding-right: 15px; */
     padding-right: 35px;
     line-height: 1px;
-    /* Keep text on one line */
     white-space: nowrap;
-    /* Hide overflowing text */
     overflow: hidden;
-    /* Show ... at the end */
     text-overflow: ellipsis; 
 }
 
@@ -388,7 +403,7 @@
 /* =========================
        PROFILE CARD
 ========================= */
-.profile-card{
+.profilecard{
     background:white;
     padding:25px;
     width:100%;
@@ -402,15 +417,15 @@
     animation:
     fade .8s ease;
 }
-.profile-card h3,
-.profile-card p {
+.profilecard h3,
+.profilecard p {
     margin: 5px 0;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
     word-break: break-word;
 }
-.profile-card p {
+.profilecard p {
     max-width: 250px;
     overflow-wrap: anywhere;
 }
