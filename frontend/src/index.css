@@ -191,12 +191,25 @@ a {
     }
 }
 .forgot-page{
-height:100vh;
+min-height:calc(100vh - 60px);
 display:flex;
+margin: -10px;
+width:100%;
 justify-content:center;
 align-items:center;
+/* background:linear-gradient(
+        -45deg,
+        #3954cc,
+        #7a44b1,
+        #3c91ab,
+        #ab36cc
+       
+    ); */
+    /* background-size:400% 400%; */
+    /* animation: gradientMove 10s ease infinite; */
 background:#f3f4f6;
 }
+
 .forgot-card{
 width:380px;
 background:white;
@@ -207,6 +220,7 @@ box-shadow:0 10px 25px rgba(0,0,0,.1);
 .forgot-card h1{
 text-align:center;
 margin-bottom:25px;
+/* color: rgb(11, 11, 11); */
 }
 .forgot-card input{
 width:100%;

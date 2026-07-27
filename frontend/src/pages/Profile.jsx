@@ -12,7 +12,6 @@ function Profile({user={}, setUser, setPage}){
     const [showOld, setShowOld] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
     const [password, setPassword] = useState("");
@@ -24,11 +23,24 @@ function Profile({user={}, setUser, setPage}){
     const [success1, setSuccess1] = useState("");
     const [error2, setError2] = useState("");
     const [success2, setSuccess2] = useState("");
+    const navigate = useNavigate();
+    
+    const [emailChanging,setEmailChanging] = useState(false);
+    const [oldOtp,setOldOtp] = useState("");
+    const [oldVerified,setOldVerified] = useState(false);
+    const [newEmail,setNewEmail] = useState("");
+    const [newEmailOtp,setNewEmailOtp] = useState("");
+    const [emailError,setEmailError] = useState("");
+    const [emailSuccess,setEmailSuccess] = useState("");
+
+    const [oldOtpVerified,setOldOtpVerified] = useState(false);
+    const [newOtpSent,setNewOtpSent] = useState(false);
+    const [emailChanged,setEmailChanged] = useState(false);
+
     useEffect(()=>{
     setUsername(user.username || "");
     setEmail(user.email || "");
     },[user]);
-      
     
     useEffect(()=>{
         
@@ -95,15 +107,113 @@ function Profile({user={}, setUser, setPage}){
         );
     }
     }
+    const verifyOldEmailOTP = async()=>{
+    setEmailError("");
+    setError("");
+    setSuccess("")
+    setEmailSuccess("");
+    try{
+        await API.post(
+            "/auth/verify-old-email-otp",{
+                    otp:oldOtp
+                }
+        );
+        setOldVerified(true);
+        setEmailSuccess(
+            "Old email verified"
+        );
+    }
+    catch(err){
+        setEmailError(
+            err.response?.data?.detail ||
+            "Invalid OTP"
+        );
+    }
+    }
+    const sendNewEmailOTP = async()=>{
+    setEmailError("");
+    setEmailSuccess("");
+    try{
+        await API.post(
+            "/auth/send-new-email-otp",
+            {
+                    new_email:newEmail
+            }
+        );
+        setNewOtpSent(true);
+        setEmailSuccess(
+            "OTP sent to new email"
+        );
+    }
+    catch(err){
+        setEmailError(
+            err.response?.data?.detail ||
+            "OTP sending failed"
+        );
+    }
+    }   
+       
+    const verifyNewEmailOTP = async()=>{
+    try{
+        const res = await API.post(
+            "/auth/verify-new-email-otp",
+            null,
+            {params:{
+            new_email:newEmail,
+            otp:newEmailOtp
+            }
+        }
+        );
+        setUser({
+            ...user,
+            email:newEmail
+        });
+
+        setEmailChanging(false);
+        setOldVerified(false);
+        setNewOtpSent(false);
+        setSuccess(
+            "Email changed successfully"
+        );
+    }
+    catch(err){
+        setEmailError(
+            err.response?.data?.detail ||
+            "Invalid OTP"
+        );
+    }
+    }  
 
     const updateProfile=async()=>{
         setError("");
+        setEmailError("")
+        setEmailSuccess("")
         setSuccess("");
         if (username.trim().length < 6) {
         setError("Username must be at least 6 characters");
         return;
         }
-         try{
+
+         // email changed
+        if(email !== user.email){
+            try{
+                await API.post(
+                "/auth/send-old-email-otp", {new_email:email});
+                setEmailChanging(true);
+                setEmailSuccess(
+                "OTP sent to your old email"
+                );
+            }
+            catch(err){
+                setError(
+                err.response?.data?.detail ||
+                "OTP sending failed"
+                );
+            }
+            return;
+        }
+
+        try{
         const res = await API.put("/auth/profile", {
             username,
             email
@@ -120,7 +230,6 @@ function Profile({user={}, setUser, setPage}){
         err.response?.data?.detail || "Updated failed"
        );
     }
-        
     }
     
     return(
@@ -159,28 +268,56 @@ function Profile({user={}, setUser, setPage}){
             onChange={(e)=>setUsername(e.target.value)}
             placeholder="Username"
         />
-
         <input
             type="email"
             value={email}
             onChange={(e)=>setEmail(e.target.value)}
             placeholder="Email"
         />
-
-        <button onClick={updateProfile}>
+        <div className="email-verification">
+        {emailChanging && !oldVerified && (<>
+                <h3>Verify Old Email</h3>
+                <input type="text"
+                placeholder="Enter old email OTP"
+                value={oldOtp}
+                onChange={e=>setOldOtp(e.target.value)}
+                />
+                <button onClick={verifyOldEmailOTP}>
+                    Verify OTP</button> </>)}
+                {oldVerified && !newOtpSent &&(
+                    <><h3>Verify New Email</h3>
+                <input type="email"
+                placeholder="Enter new email"
+                value={newEmail}
+                onChange={e=>setNewEmail(e.target.value)}/>
+                <button onClick={sendNewEmailOTP}>
+                    Send OTP</button>
+                    </>)}
+                {newOtpSent && 
+                (<><h3>OTP sends to New Email</h3>
+                <input type="text"
+                placeholder="New email OTP"
+                value={newEmailOtp}
+                onChange={e=>setNewEmailOtp(e.target.value)}/>
+                <button onClick={verifyNewEmailOTP}>
+                    Confirm Email</button>
+                </>)}
+            {emailError && 
+            <div className="profile-error">
+                {emailError}
+            </div>
+            }{emailSuccess && 
+            <div className="profile-success">{emailSuccess}
+            </div>
+            }
+        </div>
+        {!emailChanging && (
+        <button onClick={updateProfile} className="save-btn">
             Save Changes
         </button>
-            {error && (
-    <div className="profile-error">
-        {error}
-    </div>
-    )}
-    {success && (
-    <div className="profile-success">
-        {success}
-    </div>
-    )}
-    </div>
+        )}
+    {error && (<div className="profile-error">{error}</div> )}
+    {success && (<div className="profile-success">{success}</div>)}</div>
 
 
     {/* Account */}

@@ -3,11 +3,12 @@ from pydantic import BaseModel, EmailStr
 
 class OTPRequest(BaseModel):
 
-    email: EmailStr
+    new_email: EmailStr
 
 
 class OTPVerify(BaseModel):
-
-    email: EmailStr
-
     otp: str
+
+class NewEmailOTPVerify(BaseModel):
+    new_email:EmailStr
+    otp:str

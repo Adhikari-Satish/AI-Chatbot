@@ -93,7 +93,7 @@ function ForgotPassword(){
         }
     }
     return(
-    <div className="auth-container">
+    <div className="forgot-page">
         <div className="forgot-card">
             <h1>Forgot Password</h1>
             {/* Email */}

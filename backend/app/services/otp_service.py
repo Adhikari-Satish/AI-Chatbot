@@ -10,34 +10,34 @@ def generate_otp():
         )
     )
 
-def save_otp(
-    db: Session,
-    email: str
-    ):
-    otp = generate_otp()
-    otp_record = OTP(
-        email=email,
-        otp=otp
-    )
-    db.add(otp_record)
-    db.commit()
-    return otp
+# def save_otp(
+#     db: Session,
+#     email: str
+#     ):
+#     otp = generate_otp()
+#     otp_record = OTP(
+#         email=email,
+#         otp=otp
+#     )
+#     db.add(otp_record)
+#     db.commit()
+#     return otp
 
 
 
-def verify_otp(
-    db: Session,
-    email: str,
-    otp: str
-):
-    record = (
-        db.query(OTP)
-        .filter(
-            OTP.email == email,
-            OTP.otp == otp
-        )
-        .first()
-    )
-    if record:
-        return True
-    return False
+# def verify_otp(
+#     db: Session,
+#     email: str,
+#     otp: str
+# ):
+#     record = (
+#         db.query(OTP)
+#         .filter(
+#             OTP.email == email,
+#             OTP.otp == otp
+#         )
+#         .first()
+#     )
+#     if record:
+#         return True
+#     return False

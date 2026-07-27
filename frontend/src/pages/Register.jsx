@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { register } from "../services/auth.js";
+import { register, verifyRegisterOTP} from "../services/auth.js";
 import { Link, useNavigate } from "react-router-dom";
 import eye from "../assets/eye.png";
+// import api from "./api";
 import eyeOff from "../assets/eye-off.png";
 
 function Register() {
@@ -9,6 +10,10 @@ function Register() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
+    
+    const [otpMode, setOtpMode] = useState(false);
+    const [otp,setOtp] = useState("");
+    const [otpError,setOtpError] = useState("");
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
 
@@ -26,38 +31,39 @@ function Register() {
         });
     };
     // setErrors({
-
     //         ...errors,
-
     //         [e.target.name]: ""
-
     //     });
 
     const handleSubmit=async (e) => {
 
         e.preventDefault();
+        setErrors({});
+        setOtpError("")
 
         try {
-
-            await register(form);
-
-            alert("Registration Successful");
-            setForm({
-            username:"",
-            email:"",
-            password:""});
-
-            navigate("/");
+            const response = await register(form);
+            alert("OTP sent to your email");
+            setErrors("OTP sent to your email")
+            setOtpMode(true);
+            // alert("Registration Successful");
+            // setForm({
+            // username:"",
+            // email:"",
+            // password:""});
+            // navigate("/");
 
         }
 
         catch(error){
             const detail =error.response?.data?.detail;
             if(detail?.field==="email"){
-                setErrors({ email: detail?.message });
+                setErrors({email:detail.message});
             }
             else{
-                setErrors({ server: detail?.message ||"Registration failed" });
+                setErrors({
+                server: detail?.message || "Registration failed"
+            });
             }
         }
 
@@ -70,12 +76,47 @@ function Register() {
 
             // });
         }
+        // Verify OTP
+
+    const verifyOTP=async()=>{
+        setErrors({});
+        setOtpError("")
+        
+        try{
+            const response=await verifyRegisterOTP({
+                email:form.email,
+                otp:otp
+            });
+            alert(
+                "Email verified successfully"
+            );
+            setOtpMode(false)
+            navigate("/");
+        }
+        catch(error){
+        //     console.log(
+        //     "VERIFY ERROR:",
+        //     error.response?.data
+        // );
+        setOtpError(
+            error.response?.data?.detail?.message ||
+            error.response?.data?.detail ||
+            "Something went wrong"
+        );
+            // setErrors({
+            //     server:
+            //     error.response?.data?.detail ||
+            //     "Invalid OTP"
+            // });
+        }
+    }
 
     return (
         <div className="auth-container">
         <div className="auth-card">
-            <h1>Register</h1>
-
+            {/* <h1>Register</h1> */}
+            <h1>{otpMode ? "Verify Email" : "Register"}</h1>
+            {!otpMode ? 
             <form onSubmit={handleSubmit}>
 
                 <input
@@ -119,20 +160,32 @@ function Register() {
                 </button>
 
             </form>
-            { errors.email && <p className="error">    {errors.email} </p>}
-
-            {
-                errors.server &&
-
+            : <div>
+                <input type="text"
+                placeholder="Enter OTP"
+                value={otp}
+                onChange={(e)=>setOtp(e.target.value)}
+                />
+                <button onClick={verifyOTP}>
+                    Verify OTP</button>
+            </div>}
+            {otpError &&
+                      <p className="error">
+                     {otpError}
+                    </p>
+              }
+            { errors.email && <p className="error"> {errors.email} </p>}
+            {errors.server &&
                 <p className="error">
                     {errors.server}
                 </p>
-
             }
+            {!otpMode &&
             <p className="auth-link">Already have account?&nbsp;&nbsp;
              <Link to="/">
                  Login
             </Link></p>
+            }
             {/* <Link to="/">Login</Link> */}
 
         </div>

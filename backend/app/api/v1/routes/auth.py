@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
-
+from sqlalchemy.exc import IntegrityError
 # from app.schemas.user import UserCreate, UserResponse
 from app.schemas.user import (
     UserCreate,
@@ -15,11 +15,12 @@ from app.core.security import hash_password, verify_password
 
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.services.auth_service import create_user, login_user
+# from app.services.auth_service import create_user, login_user
+from app.services.auth_service import login_user
 
-from app.schemas.otp import OTPRequest
+from app.schemas.otp import OTPRequest, OTPVerify, NewEmailOTPVerify
 
-from app.services.otp_service import save_otp, generate_otp
+from app.services.otp_service import generate_otp
 from app.services.email_service import send_email
 from app.core.auth import get_current_user
 from app.models.user import User
@@ -37,56 +38,107 @@ pwd_context = CryptContext(
 )
 
 
-@router.post("/register", response_model=UserResponse)
+# @router.post("/register", response_model=UserResponse)
+@router.post("/register")
 def register(
     user: UserCreate,
-    db: Session = Depends(get_db)
-):
-
-    new_user = create_user(
-        db,
-        user.username,
-        user.email,
-        user.password
+    db: Session = Depends(get_db)):   
+    existing_user = (
+        db.query(User)
+        .filter(User.email == user.email)
+        .first()
     )
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "field":"email",
+                "message":"Email already registered"
+            }
+        )
+    # generate otp
+    otp = generate_otp()
+    # save otp
+    hashed = hash_password(user.password)
+    otp_record = OTP(
+        username=user.username,
+        email=user.email,
+        password=hashed,
+        otp=otp,
+        purpose="Registration"
+    )
+    db.add(otp_record)
+    db.commit()
+    # store user data temporarily
     
-    # otp_valid = verify_otp( # type: ignore
-    #     db,
-    #     user.email,
-    #     user.otp
-    # )
-    # if not otp_valid:
-
-    #     raise HTTPException(
-    #         status_code=401,
-    #         detail="Invalid OTP"
-    #     )
+    # send otp
+    send_email(
+        user.email,
+        otp
+    )
+    return {
+        "message":"OTP sent to email",
+        "email":user.email
+    }
 
 
-    return new_user
-
-# @router.post("/send-otp")
-# def send_otp(
-#     data: OTPRequest,
-#     db: Session = Depends(get_db)
-# ):
-
-#     otp = save_otp(
-#         db,
-#         data.email
-#     )
-
-
-#     send_email(
-#         data.email,
-#         otp
-#     )
-
-
-#     return {
-#         "message":
-#         "OTP sent successfully"
-#     }
+@router.post("/verify-register-otp")
+def verify_register_otp(
+    data:dict,
+    db:Session=Depends(get_db)
+    ):
+    email = data.get("email")
+    otp = data.get("otp")
+    print("EMAIL:",email)
+    print("OTP:",otp) 
+    otp_record = (
+        db.query(OTP)
+        .filter(
+            OTP.email == email,
+            OTP.otp == otp,
+            OTP.purpose == "Registration"
+        )
+        .first()
+    )
+    print("OTP RECORD:", otp_record)
+    if not otp_record:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid OTP"
+        #     detail={
+        #     "field": "otp",
+        #     "message": "Invalid OTP"
+        # }
+        )
+    new_user = User(
+        username = otp_record.username,
+        email = otp_record.email,
+        password = otp_record.password,
+        is_verified = True
+        )
+    
+    try:
+        db.add(new_user)
+        # delete used otp
+        db.delete(otp_record)
+        db.commit()
+        db.refresh(new_user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="User already exists"
+        )
+    # return {
+    #     "message":"Registration successful",
+    #     "user":{
+    #         "username":new_user.username,
+    #         "email":new_user.email
+    #     }
+    # }   
+    return {
+        "message": "Email verified successfully"
+    }
 
 @router.get("/profile")
 def get_profile(
@@ -124,14 +176,13 @@ def update_profile(
         User.email == data.email,
         User.id != current_user.id
     ).first()
-
     if existing_email:
         raise HTTPException(
             status_code=400,
             detail="Email already exists"
         )
     current_user.username = data.username
-    current_user.email = data.email
+    # current_user.email = data.email
     db.commit()
     db.refresh(current_user)
     return current_user
@@ -284,6 +335,7 @@ def send_otp(
         "OTP:",
         otp
     )
+    send_email(email, otp)
     return {
         "message":"OTP sent successfully"
     }
@@ -295,9 +347,7 @@ def verify_otp(
     ):
     email=data.get("email")
     otp=data.get("otp")
-    record=db.query(
-        OTP
-    ).filter(
+    record=db.query(OTP).filter(
         OTP.email==email,
         OTP.otp==otp
     ).first()
@@ -308,6 +358,113 @@ def verify_otp(
         )
     return {
         "message":"OTP verified"
+    }
+   
+    
+@router.post("/send-old-email-otp")
+def send_old_email_otp(
+    data:OTPRequest,
+    db:Session=Depends(get_db),
+    current_user=Depends(get_current_user)
+    ):
+    existing_email = db.query(User).filter(
+            User.email == data.new_email
+        ).first()
+    if existing_email:
+        raise HTTPException(
+                status_code=400,
+                detail="Email already exists"
+        )
+    otp = generate_otp()
+    otp_record = OTP(
+        email=current_user.email,
+        otp=otp,
+        purpose="old_email"
+    )
+    db.add(otp_record)
+    db.commit()
+    send_email(
+        current_user.email,
+        otp
+    )
+    return {
+        "message":"OTP sent to old email"
+    }
+    
+@router.post("/verify-old-email-otp")
+def verify_old_email_otp(
+    data:OTPVerify,
+    db:Session=Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    record = db.query(OTP).filter(
+        OTP.email==current_user.email,
+        OTP.otp==data.otp,
+        OTP.purpose=="old_email"
+    ).first()
+    if not record:
+        raise HTTPException(
+            400,
+            "Invalid OTP"
+        )
+    return {
+        "verified":True
+    }
+    
+@router.post("/send-new-email-otp")
+def send_new_email_otp(
+    data:OTPRequest,
+    db:Session=Depends(get_db),
+    current_user=Depends(get_current_user)
+    ):
+    existing=db.query(User).filter(
+        User.email==data.new_email
+    ).first()
+    if existing:
+        raise HTTPException(
+            400,
+            "Email already exists"
+        )
+    otp=generate_otp()
+    record=OTP(
+        email=data.new_email,
+        otp=otp,
+        purpose="new_email"
+    )
+    db.add(record)
+    db.commit()
+    send_email(
+        data.new_email,
+        otp
+    )
+    return {
+        "message":"OTP sent to new email"
+    }
+    
+@router.post("/verify-new-email-otp")
+def verify_new_email_otp(
+    new_email: str,
+    otp: str,
+    db:Session=Depends(get_db),
+    current_user=Depends(get_current_user)
+    ):
+    record=db.query(OTP).filter(
+        OTP.email==new_email,
+        OTP.otp==otp,
+        OTP.purpose=="new_email"
+    ).first()
+    if not record:
+        raise HTTPException(
+            400,
+            "Invalid OTP"
+        )
+    current_user.email=new_email
+    db.delete(record)
+    db.commit()
+    db.refresh(current_user)
+    return {
+        "message":
+        "Email changed successfully"
     }
 # @router.post("/login")
 # def login(

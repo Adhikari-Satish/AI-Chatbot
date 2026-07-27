@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
-from email.message import EmailMessage
+from app.core.config import settings
+# from email.message import EmailMessage
 def send_email(
     receiver,
     otp
@@ -9,7 +10,8 @@ def send_email(
     app_password = "wipa kvjz brem xtos"
     message = MIMEText(
         f"""
-        Your AI Chatbot OTP is:
+        Your AI Chatbot 
+        Verification OTP is:
         {otp}
         Valid for 5 minutes.
         """
@@ -17,14 +19,15 @@ def send_email(
     message["Subject"] = "AI Chatbot OTP Verification"
     message["From"] = sender
     message["To"] = receiver
-    server = smtplib.SMTP(
+    
+    try:
+        server = smtplib.SMTP(
         "smtp.gmail.com",
-        587
-    )
-    server.starttls()
-    server.login(
-        sender,
-        app_password
-    )
-    server.send_message(message)
-    server.quit()
+        587)
+        server.starttls()
+        server.login( sender, app_password.replace(" ", ""))
+        server.send_message(message)
+        server.quit()
+    except Exception as e:
+        print("Email Error:", e)
+        raise

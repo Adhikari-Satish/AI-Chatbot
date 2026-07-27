@@ -11,6 +11,12 @@ export const register = async (userData)=>{
     );
 
 };
+export const verifyRegisterOTP=(data)=>{
+    return api.post(
+        "/auth/verify-register-otp",
+        data
+    );
+};
 
 export const login = async (email, password) => {
 

@@ -81,13 +81,12 @@ function Sidebar({page, setPage, setOpen, chatHistory, setChatId, createNewChat,
         Documents
       </button>
       {/* <button onClick={() => {changePage("chat");createNewChat}}> */}
-      <button onClick={() => changePage("history")}>
-        History
+      <button onClick={() => changePage("forgot")}>
+        Forgot password
       </button>
       <button onClick={createNewChat} className="ima1">
        <img src={image} className="ima" alternae="im"></img> New chat
       </button>
-
       {/* <hr /> */}
       <h3 className="history-title">Recent Chats</h3>
       <div className="history-list">

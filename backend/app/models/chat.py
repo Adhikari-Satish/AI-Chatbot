@@ -21,5 +21,5 @@ class Chat(Base):
     messages = relationship(
         "Message",
         back_populates="chat",
-        cascade="all, delete"
+        cascade="all, delete-orphan"
     )

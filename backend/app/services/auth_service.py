@@ -1,8 +1,10 @@
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-
+from app.services.otp_service import generate_otp
+from app.services.email_service import send_email
 from app.models.user import User
+from app.models import OTP
 # from app.core.security import hash_password
 from app.core.security import (
     hash_password,
@@ -11,54 +13,57 @@ from app.core.security import (
 )
 
 
-def create_user(
-    db: Session,
-    username,
-    email,
-    password
-    ):
+# def create_user(
+#     db: Session,
+#     username,
+#     email,
+#     password
+#     ):
     
-    existing_user = (
-        db.query(User)
-        .filter(User.email == email)
-        .first()
-    )
-
-
-    if existing_user:
-        raise HTTPException(
-            status_code=400,
-            detail={"field":"email",
-                "message": "Email already registered"}
-        )
-
-    hashed = hash_password(password)
-    user = User(
-        username=username,
-        email=email,
-        password=hashed
+#     existing_user = (
+#         db.query(User)
+#         .filter(User.email == email)
+#         .first()
+#     )
+#     if existing_user:
+#         raise HTTPException(
+#             status_code=400,
+#             detail={"field":"email",
+#                 "message": "Email already registered"}
+#         )
+#     # from now
+#     otp = generate_otp()
+#     reset=OTP(
+#             email=email,
+#             otp=otp,
+#             purpose="Registration"
+#             )
+#     db.add(reset)
+#     db.commit()
+#     send_email(email,otp)
         
-    )
-    try:
+    # hashed = hash_password(password)
+    # user = User(
+    #     username=username,
+    #     email=email,
+    #     password=hashed,
+    #     is_verified=False
+        
+    # )
+    # try:
+    #     db.add(user)
+    #     db.commit()
+    #     db.refresh(user)
+    # except IntegrityError:
+    #     db.rollback()
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail={"field":"general",
+    #             "message": "User already exists"}
+    #     )
+    
 
-        db.add(user)
-
-        db.commit()
-
-        db.refresh(user)
-
-
-    except IntegrityError:
-
-        db.rollback()
-
-        raise HTTPException(
-            status_code=400,
-            detail={"field":"general",
-                "message": "User already exists"}
-        )
-
-    return user
+    # return user
 
 def authenticate_user(
     db: Session,

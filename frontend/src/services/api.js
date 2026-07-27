@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "http://127.0.0.1:8000/api/v1",
-  baseURL:"http://localhost:8000/api/v1",
+  baseURL: "http://127.0.0.1:8000/api/v1",
+  // baseURL:"http://localhost:8000/api/v1",
 });
 
 api.interceptors.request.use((config) => {
@@ -13,8 +13,8 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
-},
-(error)=>Promise.reject(error)
+}
+// (error)=>Promise.reject(error)
 );
 
 // Response Interceptor
